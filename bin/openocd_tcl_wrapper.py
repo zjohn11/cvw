@@ -364,7 +364,7 @@ class SVF_Generator:
         regno = translate_regno(register)
         self.access_register(write=False, regno=regno)
         self.read_dmi("0x4", expected_data & 0xffffffff)
-        if self.LLEN >= 64:
+        if self.XLEN >= 64:
             self.read_dmi("0x5", (expected_data >> 32) & 0xffffffff)
 
     def step(self):
