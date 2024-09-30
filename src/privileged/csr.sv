@@ -100,6 +100,8 @@ module csr import cvw::*;  #(parameter cvw_t P) (
   output logic                     ebreakEn,
   output logic                     Step,
   output logic                     DebugStopTime_REGW,
+  input  logic                     HaltReq,
+  input  logic                     ResumeReq,
   output logic [P.XLEN-1:0]        DPC,
   input  logic                     DCall,
   input  logic                     DRet,
@@ -323,7 +325,7 @@ module csr import cvw::*;  #(parameter cvw_t P) (
   if (P.DEBUG_SUPPORTED) begin:csrd
     csrd #(P) csrd(.clk, .reset, .DebugMode, .PrivilegeModeW,
     .CSRWriteDM, .CSRAdrM(CSRAdrDM), .CSRWriteValM(CSRWriteValDM), .CSRDReadValM, .IllegalCSRDAccessM,
-    .DebugCause, .ebreakM, .ebreakEn, .Step, .DebugStopTime_REGW, .DebugStopCount_REGW, .DPC, .PCM, .DCall);
+    .DebugCause, .ebreakM, .ebreakEn, .Step, .DebugStopTime_REGW, .DebugStopCount_REGW, .HaltReq, .ResumeReq, .DPC, .PCM, .DCall);
   end else begin
     assign DebugStopCount_REGW = '0;
     assign DebugStopTime_REGW = '0;
