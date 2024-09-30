@@ -53,7 +53,7 @@ module adrdecs import cvw::*;  #(parameter cvw_t P) (
   assign SelRegions[13] = 1'b0; // reserve for BSG_DMC_CONFIG
   adrdec #(P.PA_BITS) progbufdec(PhysicalAddress, P.PROGBUF_BASE[P.PA_BITS-1:0], P.PROGBUF_RANGE[P.PA_BITS-1:0], P.DEBUG_SUPPORTED, AccessRX, Size, SUPPORTED_SIZE, SelRegions[14]);
 
-  assign SelRegions[0] = ~|(SelRegions[11:1]); // none of the regions are selected
+  assign SelRegions[0] = ~|(SelRegions[14:1]); // none of the regions are selected
 endmodule
 
   // verilator lint_on UNOPTFLAT 
