@@ -43,6 +43,8 @@ module csrd import cvw::*;  #(parameter cvw_t P) (
   output logic              Step,
   output logic              DebugStopTime_REGW,
   output logic              DebugStopCount_REGW,
+  input  logic              HaltReq,
+  input  logic              ResumeReq,
   output logic [P.XLEN-1:0] DPC
 );
   `include "debug.vh"
@@ -55,6 +57,7 @@ module csrd import cvw::*;  #(parameter cvw_t P) (
   logic [P.XLEN-1:0] DPCWriteVal;
   logic WriteDCSRM;
   logic WriteDPCM;
+  logic [P.XLEN-1:0] OriginalDPC;
 
   // DCSR fields
   const logic [3:0] DebugVer = 4'h4;
@@ -119,7 +122,10 @@ module csrd import cvw::*;  #(parameter cvw_t P) (
                 DebugStopCount_REGW, DebugStopTime_REGW, Cause, V, MPrvEn, NMIP, Step, Prv};
 
   assign DPCWriteVal = DCall ? PCM : CSRWriteValM;
-  flopenr #(P.XLEN) DPCreg (clk, reset, WriteDPCM | DCall, DPCWriteVal, DPC);
+  //Setting OriginalDPC to DPC when a Halt Request Occurs:
+  flopenr #(P.XLEN) OGDPCreg (clk, reset, HaltReq, DPC, OriginalDPC);
+  //Changing to add load (ResumeReq) to set DPC to OriginalDPC if Resume Request Occurs
+  flopenl #(P.XLEN) DPCreg (~clk, ResumeReq, WriteDPCM | DCall, DPCWriteVal, OriginalDPC, DPC);
 
   always_comb begin
     CSRDReadValM = '0;
