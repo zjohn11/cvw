@@ -358,7 +358,7 @@ module wallypipelinedcore import cvw::*; #(parameter cvw_t P) (
       .STATUS_MXR, .STATUS_SUM, .STATUS_MPRV, .STATUS_MPP, .STATUS_FS, 
       .PMPCFG_ARRAY_REGW, .PMPADDR_ARRAY_REGW, 
       .FRM_REGW, .ENVCFG_CBE, .ENVCFG_PBMTE, .ENVCFG_ADUE, .wfiM, .IntPendingM, .BigEndianM, .ebreakM,
-      .ebreakEn, .ForceBreakPoint, .DebugMode, .ProgBufTrap, .DebugCause, .Step, .DebugStopTime_REGW, .DPC, .DCall,
+      .ebreakEn, .ForceBreakPoint, .DebugMode, .ProgBufTrap, .DebugCause, .Step, .DebugStopTime_REGW, .HaltReq, .ResumeReq, .DPC, .DCall,
       .DRet, .ExecProgBuf, .DebugSel(CSRSel), .DebugRegAddr, .DebugCapture,
       .DebugRegUpdate, .DebugScanEn(DebugScanEn & CSRSel), .DebugScanIn, .DebugScanOut(CSRScanOut));
     if (P.DEBUG_SUPPORTED) begin
