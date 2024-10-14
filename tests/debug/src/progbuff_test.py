@@ -33,7 +33,7 @@ def main():
         svf.comment("Write \"0xbadc0ffee0ddf00d\" to x9")
         svf.write_data("X9", 0xbadc0ffee0ddf00d)
         svf.comment("Write program buffer:")
-        svf.write_progbuf([0x00943023, 0x00840413, 0x00100073])
+        svf.write_progbuf([0xff718393, 0x00840413, 0x00100073])
         svf.comment("Execute Program Buffer")
         svf.exec_progbuf()
         svf.resume()
