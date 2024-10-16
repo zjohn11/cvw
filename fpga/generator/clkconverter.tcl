@@ -4,7 +4,7 @@ set boardName $::env(XILINX_BOARD)
 #set partNumber xcvu9p-flga2104-2L-e
 #set boardName  xilinx.com:vcu118:part0:2.4
 
-set ipName xlnx_axi_clock_converter
+set ipName clkconverter
 
 create_project $ipName . -force -part $partNumber
 if {$boardName!="ArtyA7"} {
