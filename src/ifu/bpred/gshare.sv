@@ -1,8 +1,8 @@
 ///////////////////////////////////////////
 // gshare.sv
 //
-// Written: Ross Thompson
-// Email: ross1728@gmail.com
+// Written: Rose Thompson
+// Email: rose@rosethompson.net
 // Created: 16 March 2021
 // Adapted from ssanghai@hmc.edu (Shreya Sanghai)
 // Modified: 20 February 2023
