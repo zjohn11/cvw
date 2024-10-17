@@ -242,7 +242,7 @@ set line [GetLineNum ${SRC}/mmu/pmachecker.sv "ReadAccessM \\| ExecuteAccessF"]
 coverage exclude -scope /dut/core/ifu/immu/immu/pmachecker -linerange $line-$line -item e 1 -fecexprrow 1-3
 set line [GetLineNum ${SRC}/mmu/pmachecker.sv "ExecuteAccessF & PMAAccessFault"]
 coverage exclude -scope /dut/core/ifu/immu/immu/pmachecker -linerange $line-$line -item e 1 -fecexprrow 1
-set line [GetLineNum ${SRC}/mmu/pmachecker.sv "ReadAccessM    & PMAAccessFault"]
+set line [GetLineNum ${SRC}/mmu/pmachecker.sv "ReadAccessM & ~WriteAccessM & PMAAccessFault"]
 coverage exclude -scope /dut/core/ifu/immu/immu/pmachecker -linerange $line-$line -item e 1 -fecexprrow 2-4
 set line [GetLineNum ${SRC}/mmu/pmachecker.sv "PMAStoreAmoAccessFaultM ="] 
 coverage exclude -scope /dut/core/ifu/immu/immu/pmachecker -linerange $line-$line
@@ -419,7 +419,3 @@ coverage exclude -scope /dut/core/priv/priv/trap -linerange [GetLineNum ${SRC}/p
 
 # Exclude EBU Beat Counter flop because it is only idle when bus has multicycle latency, but rv64gc has single cycle latency
 coverage exclude -scope /dut/core/ebu/ebu/ebufsmarb/BeatCounter/cntrflop
-
-
-
-
