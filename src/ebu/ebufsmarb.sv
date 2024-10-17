@@ -1,7 +1,7 @@
 ///////////////////////////////////////////
 // ebufsmarb.sv
 //
-// Written: Ross Thompson ross1728@gmail.com
+// Written: Rose Thompson rose@rosethompson.net
 // Created: 23 January 2023
 // Modified: 23 January 2023
 //
