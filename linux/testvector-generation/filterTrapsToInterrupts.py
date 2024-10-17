@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#!/usr/bin/env python3
 import sys, os
 from functools import reduce
 
@@ -65,4 +65,4 @@ with open(tvDir+'interrupts.txt', 'w') as interruptsFile:
                 for i in range(7):
                     trapsFile.readline()
         
-print("Finished filtering traps down to just external interrupts.")
+print("Finished filtering traps down to just external interr
