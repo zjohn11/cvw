@@ -1,7 +1,7 @@
 ///////////////////////////////////////////
 // atomic.sv
 //
-// Written: Ross Thompson ross1728@gmail.com
+// Written: Rose Thompson rose@rosethompson.net
 // Created: 31 January 2022
 // Modified: 18 January 2023
 //
@@ -39,7 +39,7 @@ module atomic import cvw::*;  #(parameter cvw_t P) (
   input logic [2:0]           LSUFunct3M,     // IEU or HPTW memory operation size
   input logic [1:0]           LSUAtomicM,     // 10: AMO operation, select AMOResultM as the writedata output, 01: LR/SC operation
   input logic [1:0]           PreLSURWM,      // IEU or HPTW Read/Write signal
-  input logic                 IgnoreRequest,  // On FlushM or TLB miss ignore memory operation
+  input logic                 LSUFlushW,  // On FlushM or TLB miss ignore memory operation
   output logic [P.XLEN-1:0]   IMAWriteDataM,  // IEU, HPTW, or AMO write data
   output logic                SquashSCW,      // Store conditional failed disable write to GPR
   output logic [1:0]          LSURWM          // IEU or HPTW Read/Write signal gated by LR/SC
@@ -49,15 +49,15 @@ module atomic import cvw::*;  #(parameter cvw_t P) (
   logic                       MemReadM;
 
   // AMO ALU
-  if (P.A_SUPPORTED | P.ZAAMO_SUPPORTED) begin
+  if (P.ZAAMO_SUPPORTED) begin
     amoalu #(P) amoalu(.ReadDataM, .IHWriteDataM, .LSUFunct7M, .LSUFunct3M, .AMOResultM);
     mux2 #(P.XLEN) wdmux(IHWriteDataM, AMOResultM, LSUAtomicM[1], IMAWriteDataM);
   end else 
     assign IMAWriteDataM = IHWriteDataM;
   
   // LRSC unit
-  if (P.A_SUPPORTED | P.ZALRSC_SUPPORTED) begin
-    assign MemReadM = PreLSURWM[1] & ~IgnoreRequest;
+  if (P.ZALRSC_SUPPORTED) begin
+    assign MemReadM = PreLSURWM[1] & ~LSUFlushW;
     lrsc #(P) lrsc(.clk, .reset, .StallW, .MemReadM, .PreLSURWM, .LSUAtomicM, .PAdrM, .SquashSCW, .LSURWM);
   end else begin
     assign SquashSCW = 0;
