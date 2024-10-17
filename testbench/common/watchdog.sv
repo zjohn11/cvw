@@ -1,7 +1,7 @@
 ///////////////////////////////////////////
 // watchdog.sv
 //
-// Written: Ross Thompson ross1728@gmail.com
+// Written: Rose Thompson rose@rosethompson.net
 // Modified: 14 June 2023
 //
 // Purpose: Detects if the processor is stuck and halts the simulation
