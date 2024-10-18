@@ -536,8 +536,10 @@ class archState:
 
         if flen == 32:
             self.f_rf = ['00000000']*32
-        else:
+        elif flen == 64:
             self.f_rf = ['0000000000000000']*32
+        else:
+            self.f_rf = ['00000000000000000000000000000']*32
         self.pc = 0
         self.flen = flen
 
@@ -1564,4 +1566,3 @@ def compute(trace_file, test_name, cgf, parser_name, decoder_name, detailed, xle
         f.close()
 
     return rpt_str
-
