@@ -43,7 +43,7 @@ def simd_val_comb(xlen, bit_width, signed=True):
     :type signed: bool
     '''
 
-    fmt = {8: 'b', 16: 'h', 32: 'w', 64: 'd'}
+    fmt = {8: 'b', 16: 'h', 32: 'w', 64: 'd', 128: 'q'}
     sz = fmt[bit_width]
     var_num = xlen//bit_width
     coverpoints = []
@@ -78,7 +78,7 @@ def simd_base_val(rs, xlen, bit_width, signed=True):
     :type signed: bool
     '''
 
-    fmt = {8: 'b', 16: 'h', 32: 'w', 64: 'd'}
+    fmt = {8: 'b', 16: 'h', 32: 'w', 64: 'd', 128: 'q'}
 
     sz = fmt[bit_width]
     var_num = xlen//bit_width
@@ -621,4 +621,3 @@ def expand_cgf(cgf_files, xlen,flen, log_redundant=False):
                                     cgf[labels][label].insert(l+i,cp,coverage,comment=comment)
                                     i += 1
     return dict(cgf)
-
