@@ -1,7 +1,7 @@
 ///////////////////////////////////////////
 // functionName.sv
 //
-// Written: Ross Thompson ross1728@gmail.com
+// Written: Rose Thompson rose@rosethompson.net
 // 
 // Purpose: decode name of function
 // 

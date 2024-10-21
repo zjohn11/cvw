@@ -132,7 +132,7 @@ module csr import cvw::*;  #(parameter cvw_t P) (
   logic                    CSRWriteDM;
   logic                    CSRMWriteM, CSRSWriteM, CSRUWriteM;
   logic                    UngatedCSRMWriteM;
-  logic                    WriteFRMM, WriteFFLAGSM;
+  logic                    WriteFRMM, SetOrWriteFFLAGSM;
   logic [P.XLEN-1:0]       UnalignedNextEPCM, NextEPCM, NextMtvalM;
   logic [4:0]              NextCauseM;
   logic [11:0]             CSRAdrM, CSRAdrDM;
@@ -254,7 +254,7 @@ module csr import cvw::*;  #(parameter cvw_t P) (
   csrsr #(P) csrsr(.clk, .reset, .StallW, 
     .WriteMSTATUSM, .WriteMSTATUSHM, .WriteSSTATUSM, 
     .TrapM, .FRegWriteM, .NextPrivilegeModeM, .PrivilegeModeW,
-    .mretM, .sretM, .WriteFRMM, .WriteFFLAGSM, .CSRWriteValM(CSRWriteValDM), .SelHPTW,
+    .mretM, .sretM, .WriteFRMM, .SetOrWriteFFLAGSM, .CSRWriteValM, .SelHPTW,
     .MSTATUS_REGW, .SSTATUS_REGW, .MSTATUSH_REGW,
     .STATUS_MPP, .STATUS_SPP, .STATUS_TSR, .STATUS_TW,
     .STATUS_MIE, .STATUS_SIE, .STATUS_MXR, .STATUS_SUM, .STATUS_MPRV, .STATUS_TVM,
@@ -297,15 +297,20 @@ module csr import cvw::*;  #(parameter cvw_t P) (
   // Floating Point CSRs in User Mode only needed if Floating Point is supported
   if (P.F_SUPPORTED) begin:csru
     csru #(P) csru(.clk, .reset, .InstrValidNotFlushedM, 
+<<<<<<< HEAD
       .CSRUWriteM, .CSRAdrM(CSRAdrDM), .CSRWriteValM(CSRWriteValDM), .STATUS_FS, .CSRUReadValM,  
       .SetFflagsM, .FRM_REGW, .WriteFRMM, .WriteFFLAGSM,
+=======
+      .CSRUWriteM, .CSRAdrM, .CSRWriteValM, .STATUS_FS, .CSRUReadValM,  
+      .SetFflagsM, .FRM_REGW, .WriteFRMM, .SetOrWriteFFLAGSM,
+>>>>>>> cvw/main
       .IllegalCSRUAccessM);
   end else begin
     assign FRM_REGW = '0;
     assign CSRUReadValM = '0;
     assign IllegalCSRUAccessM = 1'b1;
     assign WriteFRMM = 1'b0;
-    assign WriteFFLAGSM = 1'b0;
+    assign SetOrWriteFFLAGSM = 1'b0;
   end
   
   if (P.ZICNTR_SUPPORTED) begin:counters

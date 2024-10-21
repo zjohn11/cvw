@@ -425,7 +425,7 @@ module ifu import cvw::*;  #(parameter cvw_t P) (
   flopenr #(P.XLEN) PCEReg(clk, reset, ~StallE, PCD, PCE);
 
   // InstrM is only needed with CSRs or atomic operations
-  if (P.ZICSR_SUPPORTED | P.A_SUPPORTED) begin
+  if (P.ZICSR_SUPPORTED | P.ZAAMO_SUPPORTED | P.ZALRSC_SUPPORTED) begin
     mux2    #(32)     FlushInstrMMux(InstrE, nop, FlushM, NextInstrE);
     if (P.DEBUG_SUPPORTED)
       flopenrs #(32)     InstrMReg(clk, reset, ~StallM, NextInstrE, InstrM, DebugScanEn, DebugScanChainReg, DebugScanOut);

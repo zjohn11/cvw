@@ -1,7 +1,7 @@
 ///////////////////////////////////////////
 // loggers.sv
 //
-// Written: Rose Thompson ross1728@gmail.com
+// Written: Rose Thompson rose@rosethompson.net
 // Modified: 24 July 2024
 // 
 // Purpose: Wraps all the synthesizable rvvi hardware into a single module for the testbench.
@@ -41,7 +41,7 @@ module rvvitbwrapper import cvw::*; #(parameter cvw_t P,
 );
 
   logic        valid;
-  logic [187+(3*P.XLEN) + MAX_CSRS*(P.XLEN+12)-1:0] rvvi;
+  logic [72+(5*P.XLEN) + MAX_CSRS*(P.XLEN+16)-1:0] rvvi;
 
   localparam TOTAL_CSRS = 36;
   

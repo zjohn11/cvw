@@ -34,7 +34,7 @@ module csrsr import cvw::*;  #(parameter cvw_t P) (
   input  logic              TrapM, FRegWriteM,
   input  logic [1:0]        NextPrivilegeModeM, PrivilegeModeW,
   input  logic              mretM, sretM, 
-  input  logic              WriteFRMM, WriteFFLAGSM,
+  input  logic              WriteFRMM, SetOrWriteFFLAGSM,
   input  logic [P.XLEN-1:0] CSRWriteValM,
   input  logic              SelHPTW,
   output logic [P.XLEN-1:0] MSTATUS_REGW, SSTATUS_REGW, MSTATUSH_REGW,
@@ -106,7 +106,8 @@ module csrsr import cvw::*;  #(parameter cvw_t P) (
   always_comb
     if      (CSRWriteValM[12:11] == P.U_MODE & P.U_SUPPORTED) STATUS_MPP_NEXT = P.U_MODE;
     else if (CSRWriteValM[12:11] == P.S_MODE & P.S_SUPPORTED) STATUS_MPP_NEXT = P.S_MODE;
-    else                                                    STATUS_MPP_NEXT = P.M_MODE;
+    else if (CSRWriteValM[12:11] == 2'b10)                    STATUS_MPP_NEXT = STATUS_MPP; // do not change MPP when trying to write reserved 10
+    else                                                      STATUS_MPP_NEXT = P.M_MODE;
 
   ///////////////////////////////////////////
   // Endianness logic Privileged Spec 3.1.6.4
@@ -209,6 +210,6 @@ module csrsr import cvw::*;  #(parameter cvw_t P) (
         STATUS_SPIE     <= P.S_SUPPORTED & CSRWriteValM[5];
         STATUS_SIE      <= P.S_SUPPORTED & CSRWriteValM[1];
         STATUS_UBE      <= CSRWriteValM[6] & P.U_SUPPORTED & P.BIGENDIAN_SUPPORTED;
-      end else if (FRegWriteM | WriteFRMM | WriteFFLAGSM) STATUS_FS_INT <= 2'b11; 
+      end else if (FRegWriteM | WriteFRMM | SetOrWriteFFLAGSM) STATUS_FS_INT <= 2'b11; 
     end
 endmodule

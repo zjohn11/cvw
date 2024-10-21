@@ -1,8 +1,8 @@
 ///////////////////////////////////////////
 // localrepairbp
 //
-// Written: Ross Thompson
-// Email: ross1728@gmail.com
+// Written: Rose Thompson
+// Email: rose@rosethompson.net
 // Created: 15 April 2023
 //
 // Purpose: Local history branch predictor with speculation and repair using CBH.

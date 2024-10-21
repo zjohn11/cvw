@@ -1,8 +1,8 @@
 ///////////////////////////////////////////
 // localaheadbp
 //
-// Written: Ross Thompson
-// Email: ross1728@gmail.com
+// Written: Rose Thompson
+// Email: rose@rosethompson.net
 // Created: 16 March 2021
 //
 // Purpose: local history branch predictor with ahead pipelining and SRAM memories.

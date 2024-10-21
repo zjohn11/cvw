@@ -52,7 +52,7 @@ module wallyTracer import cvw::*; #(parameter cvw_t P) (rvviTrace rvvi);
   logic [NUMREGS-1:0] 			 rf_wb;
   logic [4:0] 					 rf_a3;
   logic 						 rf_we3;
-  logic [P.XLEN-1:0] 			 frf[32];
+  logic [P.FLEN-1:0] 			 frf[32];
   logic [`NUM_REGS-1:0] 		 frf_wb;
   logic [4:0] 					 frf_a4;
   logic 						 frf_we4;
@@ -63,6 +63,16 @@ module wallyTracer import cvw::*; #(parameter cvw_t P) (rvviTrace rvvi);
   logic [11:0] 					 CSRAdrM, CSRAdrW;
   logic                          wfiM;
   logic                          InterruptM, InterruptW;
+
+  //For VM Verification
+
+  logic [(P.XLEN-1):0]     VAdrIM,VAdrDM,VAdrIW,VAdrDW;
+  logic [(P.XLEN-1):0]     PTE_iM,PTE_dM,PTE_iW,PTE_dW;
+  logic [(P.PA_BITS-1):0]  PAIM,PADM,PAIW,PADW;
+  logic [(P.PPN_BITS-1):0] PPN_iM,PPN_dM,PPN_iW,PPN_dW;
+  logic ReadAccessM,WriteAccessM,ReadAccessW,WriteAccessW;
+  logic ExecuteAccessF,ExecuteAccessD,ExecuteAccessE,ExecuteAccessM,ExecuteAccessW;
+
     
   assign clk = testbench.dut.clk;
   //  assign InstrValidF = testbench.dut.core.ieu.InstrValidF;  // not needed yet
@@ -92,6 +102,20 @@ module wallyTracer import cvw::*; #(parameter cvw_t P) (rvviTrace rvvi);
   assign STATUS_UXL     = testbench.dut.core.priv.priv.csr.csrsr.STATUS_UXL;
   assign wfiM           = testbench.dut.core.priv.priv.wfiM;
   assign InterruptM     = testbench.dut.core.priv.priv.InterruptM;
+
+  //FOr VM Verification
+  assign VAdrIM         = testbench.dut.core.ifu.immu.immu.tlb.tlb.VAdr;
+  assign VAdrDM         = testbench.dut.core.lsu.dmmu.dmmu.tlb.tlb.VAdr;
+  assign PAIM           = testbench.dut.core.ifu.immu.immu.PhysicalAddress;
+  assign PADM           = testbench.dut.core.lsu.dmmu.dmmu.PhysicalAddress;
+  assign ReadAccessM    = testbench.dut.core.lsu.dmmu.dmmu.ReadAccessM;
+  assign WriteAccessM   = testbench.dut.core.lsu.dmmu.dmmu.WriteAccessM;
+  assign ExecuteAccessF = testbench.dut.core.ifu.immu.immu.ExecuteAccessF;
+  assign PTE_iM         = testbench.dut.core.ifu.immu.immu.PTE;
+  assign PTE_dM         = testbench.dut.core.lsu.dmmu.dmmu.PTE;
+  assign PPN_iM         = testbench.dut.core.ifu.immu.immu.tlb.tlb.PPN;
+  assign PPN_dM         = testbench.dut.core.lsu.dmmu.dmmu.tlb.tlb.PPN; 
+
   
 
   logic valid;
@@ -169,12 +193,17 @@ module wallyTracer import cvw::*; #(parameter cvw_t P) (rvviTrace rvvi);
 	  CSRArray[12'h143] = testbench.dut.core.priv.priv.csr.csrs.csrs.STVAL_REGW;
 	  CSRArray[12'h142] = testbench.dut.core.priv.priv.csr.csrs.csrs.SCAUSE_REGW;
 	  CSRArray[12'h144] = testbench.dut.core.priv.priv.csr.csrm.MIP_REGW & 12'h222 & testbench.dut.core.priv.priv.csr.csrm.MIDELEG_REGW;
-	  CSRArray[12'h14D] = testbench.dut.core.priv.priv.csr.csrs.csrs.STIMECMP_REGW;
+	  CSRArray[12'h14D] = testbench.dut.core.priv.priv.csr.csrs.csrs.STIMECMP_REGW[P.XLEN-1:0];
 	  // user CSRs
 	  CSRArray[12'h001] = testbench.dut.core.priv.priv.csr.csru.csru.FFLAGS_REGW;
 	  CSRArray[12'h002] = testbench.dut.core.priv.priv.csr.csru.csru.FRM_REGW;
 	  CSRArray[12'h003] = {testbench.dut.core.priv.priv.csr.csru.csru.FRM_REGW, testbench.dut.core.priv.priv.csr.csru.csru.FFLAGS_REGW};
 	
+    if (P.XLEN == 32) begin
+      CSRArray[12'h310] = testbench.dut.core.priv.priv.csr.csrsr.MSTATUSH_REGW;
+      CSRArray[12'h31A] = testbench.dut.core.priv.priv.csr.csrm.MENVCFGH_REGW;
+      CSRArray[12'h15D] = testbench.dut.core.priv.priv.csr.csrs.csrs.STIMECMP_REGW[63:32];
+    end
 	end else begin // hold the old value if the pipeline is stalled.
 
       // PMP CFG 3A0 to 3AF
@@ -270,6 +299,22 @@ module wallyTracer import cvw::*; #(parameter cvw_t P) (rvviTrace rvvi);
 
   flopenrc #(12)    CSRAdrWReg (clk, reset, FlushW, ~StallW, CSRAdrM, CSRAdrW);
   flopenrc #(1)     CSRWriteWReg (clk, reset, FlushW, ~StallW, CSRWriteM, CSRWriteW);
+
+  //for VM Verification
+  flopenrc #(P.XLEN)     VAdrIWReg (clk, reset, FlushW, ~StallW, VAdrIM, VAdrIW);
+  flopenrc #(P.XLEN)     VAdrDWReg (clk, reset, FlushW, ~StallW, VAdrDM, VAdrDW);
+  flopenrc #(P.PA_BITS)    PAIWReg (clk, reset, FlushW, ~StallW, PAIM, PAIW);
+  flopenrc #(P.PA_BITS)    PADWReg (clk, reset, FlushW, ~StallW, PADM, PADW);
+  flopenrc #(P.XLEN)     PTE_iWReg (clk, reset, FlushW, ~StallW, PTE_iM, PTE_iW);
+  flopenrc #(P.XLEN)     PTE_dWReg (clk, reset, FlushW, ~StallW, PTE_dM, PTE_dW);
+  flopenrc #(P.PPN_BITS) PPN_iWReg (clk, reset, FlushW, ~StallW, PPN_iM, PPN_iW);
+  flopenrc #(P.PPN_BITS) PPN_dWReg (clk, reset, FlushW, ~StallW, PPN_dM, PPN_dW);
+  flopenrc #(1)  ReadAccessWReg    (clk, reset, FlushW, ~StallW, ReadAccessM, ReadAccessW);
+  flopenrc #(1)  WriteAccessWReg   (clk, reset, FlushW, ~StallW, WriteAccessM, WriteAccessW);
+  flopenrc #(1)  ExecuteAccessDReg (clk, reset, FlushE, ~StallE, ExecuteAccessF, ExecuteAccessD);
+  flopenrc #(1)  ExecuteAccessEReg (clk, reset, FlushE, ~StallE, ExecuteAccessD, ExecuteAccessE);
+  flopenrc #(1)  ExecuteAccessMReg (clk, reset, FlushM, ~StallM, ExecuteAccessE, ExecuteAccessM);
+  flopenrc #(1)  ExecuteAccessWReg (clk, reset, FlushW, ~StallW, ExecuteAccessM, ExecuteAccessW);
 
   // Initially connecting the writeback stage signals, but may need to use M stage
   // and gate on ~FlushW.
