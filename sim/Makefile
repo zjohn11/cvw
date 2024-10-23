@@ -5,11 +5,11 @@
 SIM = ${WALLY}/sim
 TESTS = ${WALLY}/tests
 
-.PHONY: all riscoftests wallyriscoftests coveragetests deriv clean wally-riscv-arch-test benchmarks
+.PHONY: all riscoftests wallyriscoftests coveragetests deriv clean wally-riscv-arch-test benchmarks jtag
 
-all: riscoftests memfiles coveragetests deriv
+all: riscoftests coveragetests deriv jtag
 
-wally-riscv-arch-test: wallyriscoftests memfiles
+wally-riscv-arch-test: wallyriscoftests
 
 riscoftests:
 # 	Builds riscv-arch-test 64 and 32-bit versions and builds wally-riscv-arch-test 64 and 32-bit versions
@@ -18,9 +18,6 @@ riscoftests:
 wallyriscoftests:
 # 	Builds wally-riscv-arch-test 64 and 32-bit versions
 	$(MAKE) -C ${TESTS}/riscof wally-riscv-arch-test
-
-memfiles:
-	make -f makefile-memfile wally-sim-files --jobs
 
 coveragetests:
 	$(MAKE) -C ${TESTS}/coverage
