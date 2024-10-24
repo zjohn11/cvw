@@ -151,6 +151,8 @@ if (args.sim == "questa"):
         args.params += "DEBUG=1"
     if (ElfFile != ""):
         args.args += " " + ElfFile
+    if (args.jtag):
+        args.args += " +JTAGTESTFILE=" + args.jtag
     if (args.args != ""):
         args.args = " --args \\\"" + args.args + "\\\""
     if (args.params != ""):
@@ -158,14 +160,9 @@ if (args.sim == "questa"):
     # Questa cannot accept more than 9 arguments.  fcov implies lockstep
     cmd = "do wally.do " + args.config + " " + args.testsuite + " " + args.tb + " " + args.args + " " + args.params + " " + flags
     if (args.gui):  # launch Questa with GUI; add +acc to keep variables accessible
-        if(args.tb == "testbench"):
-            cmd = cd + "; " + prefix + " vsim -do \"" + cmd + " +acc -GDEBUG=1"
-        elif(args.tb == "testbench_fp"):
-            cmd = cd + "; " + prefix + " vsim -do \"" + cmd + " +acc"
+        cmd = cd + "; " + prefix + " vsim -do \"" + cmd + " +acc"
     else: # launch Questa in batch mode
         cmd = cd + "; " + prefix + " vsim -c -do \"" + cmd
-    if (args.jtag):
-        cmd += " +JTAGTESTFILE=" + args.jtag
     cmd += "\""
     print("Running Questa with command: " + cmd)
     os.system(cmd)
