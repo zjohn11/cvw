@@ -34,7 +34,7 @@ echo \$WALLY set to "${WALLY}"
 export PATH=$WALLY/bin:$PATH
 
 # Verilator needs a larger core file size to simulate CORE-V Wally
-ulimit -c 300000
+ulimit -c 234613
 
 # load site licenses and tool locations
 if [ -e "${RISCV}"/site-setup.sh ]; then
@@ -42,5 +42,8 @@ if [ -e "${RISCV}"/site-setup.sh ]; then
 else
     echo "site-setup.sh not found in \$RISCV directory. Rerun wally-toolchain-install.sh to automatically download it."
 fi
+
+# adding IMPERAS_HOME export
+export IMPERAS_HOME=$IDV/Imperas
 
 echo "setup done"
